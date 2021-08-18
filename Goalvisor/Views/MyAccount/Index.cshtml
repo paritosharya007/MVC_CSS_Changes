@@ -1,0 +1,187 @@
+﻿@model Goalvisor.Models.ApplicationUser;
+
+@{
+    ViewData["Title"] = "My Account";
+}
+
+<input type="hidden" asp-for="@Model.Id" />
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="personaldata-tab" data-toggle="tab" href="#personaldata" aria-controls="personaldata" aria-selected="true">Personal Data</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="telegram-tab" data-toggle="tab" href="#telegram" aria-controls="telegram" aria-selected="false">Telegram</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="download-tab" data-toggle="tab" href="#download" aria-controls="download" aria-selected="false">Download Data</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="deleteaccount-tab" data-toggle="tab" href="#deleteaccount" aria-controls="deleteaccount" aria-selected="false">Delete Account</a>
+    </li>
+</ul>
+<div class="tab-content p-3 border-right border">
+    <div class="tab-pane fade show active" id="personaldata" role="tabpanel" aria-labelledby="personaldata-tab">
+        <partial name="UpdateInfo.cshtml" />
+    </div>
+    <div class="tab-pane fade" id="telegram" role="tabpanel" aria-labelledby="telegram-tab">
+        <h4>Connection status: Disconnected.</h4>
+        <a href="#" class="btn btn-info"><img src="~/icons/telegram.png" width="32" height="32"> Connect Telegram</a>
+    </div>
+    <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
+        <button value="Download" class="btn btn-info"><i class="fas fa-download"></i> Download</button>
+    </div>
+    <div class="tab-pane fade" id="deleteaccount" role="tabpanel" aria-labelledby="deleteaccount-tab">
+        <a onclick="remove()" class="btn btn-danger" href="#"> <i class="fas fa-trash"></i>Delete Account</a>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+    let table = {};
+        $(document).ready(function () {
+            $('#spinner').hide();
+        table = $('#subsDT').DataTable({
+            "searchable": true,
+            "bDestroy": true,
+            "ordering": true,
+            "serverSide": true,
+            responsive: true,
+            processing: true,
+            sortable: true,
+            ajax: {
+                "url": "/MyAccount/Subscriptions/"+@Model.Id,
+                "type": "POST"
+            },
+            columns: [
+                {
+                    name: 'Package Name',
+                    data: 'packageName',
+                    title: "Package Name",
+                    sortable: true,
+                },
+                {
+                    name: 'Duration',
+                    data: 'duration',
+                    title: "Duration",
+                    sortable: true,
+                },
+                {
+                    name: 'Start Date',
+                    data: null,
+                    title: "Start Date",
+                    sortable: true,
+                    render: function (data, type, full, meta) {
+                        return full.startDate.substring(0, 10)
+                    }
+                },
+                {
+                    name: 'End Date',
+                    data: null,
+                    title: "End Date",
+                    sortable: true,
+                    render: function (data, type, full, meta) {
+                        return full.endDate.substring(0, 10)
+                    }
+                },
+                {
+                    name: 'Status',
+                    data: null,
+                    title: "Status",
+                    sortable: true,
+                    render: function (data, type, full, meta) {
+                        if (full.active) {
+                            return "Active";
+                        } else {
+                            return "Inactive";
+                        }
+                    }
+                },{
+                    name: 'StripeSubId',
+                    data: null,
+                    title: "",
+                    sortable: false,
+                    render: function (data, type, full, meta) {
+                        return "<span><a href='' onclick='return CancelSubscription(\"" + full.stripeSubId + "\")'>Cancel</a> | <a href='' onclick='return UpgradeSubscription(\"" + full.stripeSubId + "\")'>Upgrade</a></span>";
+                    }
+                }
+            ]
+        });
+
+        $("#txtCopy").val('@ViewData["RootURL"]' + "Account/Join?r=" + '@Model.ReferralCode');
+    });
+
+        function CancelSubscription(id) {
+            event.preventDefault();
+            window.location.href = "/MyAccount/Index?subId=" + id;
+        }
+
+        function UpgradeSubscription(id) {
+
+            event.preventDefault();
+            window.location.href = "/Checkout/SelectPackage?subscriptionId=" + id;
+            //event.preventDefault();
+            //setTimeout(function () { window.location = "Checkout/SelectPackage?subscriptionId=" + id; }, 500);
+        }
+
+        function updateInfo() {
+            var modalSelector = GetLoaderModal(80);
+            $(modalSelector).modal();
+
+            $(modalSelector + "-content").load("/MyAccount/UpdateInfo/",
+                function (response, status, xhr) {
+                }
+            );
+        }
+
+        $(function () {
+            $('#btnCopy').click(function () {
+                $('#txtCopy').focus();
+                $('#txtCopy').select();
+                document.execCommand('copy');
+                notifySucess("Copied to clipboard!")
+            });
+        });
+
+        function updateReferralId() {
+            var modalSelector = GetLoaderModal(80);
+            $(modalSelector).modal();
+
+            $(modalSelector + "-content").load("/MyAccount/UpdateReferralId/",
+                function (response, status, xhr) {
+                }
+            );
+        }
+
+        function gotoSubscriptionPlans() {
+            window.location.href = "/Checkout/SelectPackage";
+        }
+
+        function remove() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will disable your access to the entire site.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "/Account/Delete/",
+                        method: "POST",
+                    }).done(function (data) {
+                        if (data) {
+                            notifySucess("Account disabled successfully.");
+                            document.location.href ="/Account/Logout";
+                        } else {
+                            notifyError("Account disabled failed.");
+                        }
+                    });
+                }
+            });
+
+        }
+    </script>
+}

@@ -1,0 +1,67 @@
+﻿@model Goalvisor.Models.ReferralLink
+@{ ViewData["Title"] = "Create Referral Link"; }
+
+<style>
+
+    .linkbg {
+        background-color: #808080 !important;
+        color: #fff;
+        border-radius: 5px;
+        padding: 1px 4px 3px 4px;
+    }
+</style>
+
+<section class="row">
+    <div id="main-content" class="col-sm-12">
+        <div id="sharingPage">
+            <div class="col-sm-10 col-sm-offset-1 offset-sm-1" id="shareFold">
+                <div id="share" class="step1 step active">
+                    <h1>Create referral link</h1>
+                    <hr />
+                    <br />
+                    <div>
+                        <form method="post" asp-action="AddEdit" asp-controller="Affiliate">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label for="name">Name : </label>
+                                    <input asp-for="@Model.Name" class="form-control ml-2 mb-4" type="text" required width="100" placeholder="Type a name" tabindex="106">
+                                    <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" readonly value="@ViewBag.baseurl" class="form-control" />
+                                    <input asp-for="@Model.ReferralUrl" class="form-control mr-2" type="text" required placeholder="" title="" tabindex="106">
+                                    <span asp-validation-for="@Model.ReferralUrl" class="text-danger"></span>
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit" tabindex="107">
+                                            <span>Create Link</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <span id="lblmsg"></span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+              var CreateSuccessMsg = "@(TempData["SuccessMsg"] as string)";
+              var  ErrMsg = "@(TempData["ErrorMsg"] as string)";
+
+        if (CreateSuccessMsg !== "") {
+
+            notifySucess(CreateSuccessMsg);
+            }
+            if (ErrMsg !== "") {
+
+                notifyError(ErrMsg);
+            }
+        })
+    </script>
+}

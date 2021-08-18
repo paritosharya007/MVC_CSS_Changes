@@ -1,0 +1,122 @@
+﻿@model Goalvisor.ViewModels.SubscriptionVM
+
+<div class="card" id="editSubscriptionModal">
+    <div class="card-header">
+        <h2>Edit subscription - #@Model.Id</h2>
+    </div>
+    <div class="card-body">
+        <div class="row clearfix">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <input type="text" class="form-control" id="subscriptionId" hidden value="@Model.Id">
+
+                <div class="form-group">
+                    <label>Package Name</label>
+                    <input type="text" class="form-control" disabled placeholder="Package Name" value="@Model.PackageName">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" disabled placeholder="Username" value="@Model.UserName">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="text" class="form-control" id="startDate" name="startDate">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="text" class="form-control" id="endDate" name="endDate">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Active</label>
+                    <div class="form-control">
+                        <input type="checkbox" id="subscriptionStatus" name="subscriptionStatus"
+                               @{ if (Model.Active) @Html.Raw("checked")  }>
+                        <label for="subscriptionStatus">Active</label>
+                    </div>
+                </div>
+            </div>
+            <div style="width:100%">
+                <div class="float-right">
+                    <button class="btn btn-primary" type="button" onclick="validateSubscription()">
+                        <span id="spinner" class="spinner-border spinner-border-sm"></span>
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-round btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#spinner').hide();
+
+        $(function () {
+            $('input[name="startDate"]').daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                startDate: deserializeIsoDate('@Model.StartDate.ToString("yyyy-MM-ddTHH:mm:ss")'),
+                locale: {
+                    format: 'YYYY-MM-DD'
+                }
+            });
+        });
+
+        $(function () {
+            $('input[name="endDate"]').daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                startDate: deserializeIsoDate('@Model.EndDate.ToString("yyyy-MM-ddTHH:mm:ss")'),
+                locale: {
+                    format: 'YYYY-MM-DD'
+                }
+            });
+        });
+
+    })
+    function validateSubscription() {
+        let formErrors = [];
+        if (!$('#startDate').val()) { formErrors.push('Start date is required'); }
+        if (!$('#endDate').val()) { formErrors.push('End date is required'); }
+        let startDate = new Date($('#startDate').val())
+        let endDate = new Date($('#endDate').val())
+        if (startDate > endDate) {
+            formErrors.push('Verify Dates. End date must be after start date!');
+        }
+        if (formErrors.length > 0) {
+            formErrors.forEach(function (item, index) {
+                notifyError(item);
+            });
+            return;
+        }
+        $('#spinner').show();
+        let subscription = {
+            id: $('#subscriptionId').val(),
+            startDate: $('#startDate').val(),
+            endDate: $('#endDate').val(),
+            active: $("#subscriptionStatus[type=checkbox]").is(":checked")
+        }
+        $.ajax({
+            url: "/Subscriptions/Edit",
+            method: "POST",
+            data: subscription
+        }).done(function (data) {
+            if (data.success) {
+                $('#editSubscriptionModal').closest('div.modal').modal('hide');
+                notifySucess(data.message);
+                table.draw();
+            } else {
+                notifyError(data.message);
+                $('#spinner').hide();
+            }
+        });
+    }
+</script>

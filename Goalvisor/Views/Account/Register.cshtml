@@ -1,0 +1,38 @@
+﻿@model Goalvisor.ViewModels.RegistrationModel
+@{ ViewData["Title"] = "Register"; }
+
+<div class="auth-form">
+    <h1>@ViewBag.msg</h1>
+    <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+        <h2 class="text-center">Join</h2>
+        <input type="text" name="PackageId" hidden value="@Model.PackageId">
+
+        <input type="text" name="StripePackageId" hidden value="@Model.StripePackageId">
+        <input type="text" name="StripePriceId" hidden value="@Model.StripePriceId">
+
+        <div class="form-group">
+            <input type="text" name="Name" class="form-control" placeholder="Full name" value="@Model.Name">
+        </div>
+        <div class="form-group">
+            <input type="text" name="UserName" class="form-control" placeholder="Username" required="required" value="@Model.UserName">
+        </div>
+        <div class="form-group">
+            <input type="text" name="Email" class="form-control" placeholder="Email" required="required" value="@Model.Email">
+        </div>
+        <div class="form-group">
+            <input type="password" name="Password" class="form-control" placeholder="Password" required="required">
+        </div>
+        @Html.HiddenFor(model => model.ReferralCode)
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Join</button>
+        </div>
+    </form>
+    <p class="text-center"><a href="/Account/Login">Have an account?</a></p>
+    <br />
+    @foreach (var item in ViewData.ModelState.Where(n => n.Value.Errors.Count > 0).ToList())
+    {
+        foreach (var error in item.Value.Errors)
+        {
+<p style="color:red">@error.ErrorMessage</p>}
+            }
+</div>

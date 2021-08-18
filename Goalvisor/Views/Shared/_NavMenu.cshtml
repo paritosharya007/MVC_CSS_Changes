@@ -1,0 +1,166 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Goalvisor.ViewModels.Core;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject Goalvisor.Services.Users.IUserService userService;
+
+<nav class="navbar navbar-expand-lg navbar-toggleable-lg navbar-light bg-white border-bottom box-shadow mb-3">
+
+    <div class="container">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Goalvisor</a>
+
+        <!-- Collection of nav links, forms, and other content for toggling -->
+        <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+            <div class="navbar-nav">
+                @if (User.IsInRole(RunTimeElements.AdministratorRole) || User.IsInRole(RunTimeElements.SubscriberRole))
+                {
+                    <a class="nav-item nav-link active" asp-area="" asp-controller="Scanner" asp-action="Index">Scanner</a>
+                    @if (User.IsInRole(RunTimeElements.SubscriberRole))
+                    {
+                        <div class="nav-item dropdown show">
+                            <a data-toggle="dropdown" class="nav-link dropdown-toggle active" aria-expanded="false" asp-area="" asp-controller="Affiliate" asp-action="Index">Affiliate</a>
+
+                            <div class="dropdown-menu">
+                                <a class="nav-item nav-link active" aria-expanded="false" asp-area="" asp-controller="Affiliate" asp-action="Index">Refer a Friend</a>
+
+                                <a class="nav-item nav-link active" asp-area="" asp-controller="Affiliate" asp-action="MyReferralLinks">My Referral Links</a>
+                            </div>
+                        </div> }
+                    else if (User.IsInRole(RunTimeElements.AdministratorRole))
+                    {
+                        <div class="nav-item dropdown show">
+                            <a data-toggle="dropdown" class="nav-link dropdown-toggle active" aria-expanded="false" asp-area="" asp-controller="Affiliate" asp-action="Index">Affiliate</a>
+
+                            <div class="dropdown-menu">
+                                <a class="nav-item nav-link active" asp-area="" asp-controller="Affiliate" asp-action="List">Referral Links</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown show">
+                            <a data-toggle="dropdown" class="nav-link dropdown-toggle active" aria-expanded="false" asp-area="" asp-controller="Email" asp-action="List">Email Template</a>
+
+                            <div class="dropdown-menu">
+                                <a class="nav-item nav-link active" asp-area="" asp-controller="Email" asp-action="List">Template List</a>
+                                <a class="nav-item nav-link active" asp-area="" asp-controller="Email" asp-action="Template">Create New Template</a>
+                            </div>
+                        </div>}
+                }
+
+                @if (Context.User.Identity.IsAuthenticated)
+                {
+                    if (!(await userService.HasActiveSubscription(Context.User.Identity.Name)))
+                    {
+                        <span class="nav-item nav-link active">No Active subscription!</span>
+
+                        <a class="button-glow" asp-controller="Account" asp-action="Join">Start my free trial</a>
+                    }
+                }
+            </div>
+
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <div class="navbar-nav ml-auto">
+                    <div class="nav-item dropdown show">
+                        <a data-toggle="dropdown" class="nav-link dropdown-toggle user-action" aria-expanded="false">
+                            <i class="fas fa-user"></i>
+                            Hello, @User.Identity.Name ! <b class="caret"></b>
+                        </a>
+                        <div class="dropdown-menu">
+                            @if (User.IsInRole(RunTimeElements.AdministratorRole))
+                            {
+
+                                <a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">Manage Users</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Roles" asp-action="Index">Manage Roles</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Subscriptions" asp-action="Index">Manage Subscription</a>}
+                            <a class="nav-item nav-link active" asp-controller="MyAccount" asp-action="Index"><i>...</i> My Account</a>
+                            <a class="nav-item nav-link active" asp-controller="Subscriptions" asp-action="MySubscriptions"><i class="fas fa-file-invoice"></i> Subscriptions</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-item nav-link active" asp-area="" asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div> }
+            else
+            { 
+                <div class="navbar-nav ml-auto">
+                    <a class="button-glow" asp-controller="Account" asp-action="Join">Start my free trial</a>
+                    <a class="button-ghost" asp-controller="Account" asp-action="Login">Login</a>
+                </div>
+            }
+        </div>
+        @*<form class="form-inline">
+                <div class="custom-control custom-switch" title="" data-toggle="tooltip" data-placement="left" data-original-title="Toggle Dark Mode">
+                    <a href="#" class="btn btn-light lda">
+                        <label class="lbl-ld" for="css-toggle-btn"><i class="fa fa-sun" aria-hidden="true"></i>Light</label>
+                    </a>
+                    <input type="checkbox" class="custom-control-input" style="visibility:hidden!important" id="css-toggle-btn">
+                </div>
+                <div hidden class="custom-control custom-switch" title="" data-toggle="tooltip" data-placement="left" data-original-title="Remember my preference">
+                    <input type="checkbox" class="custom-control-input" id="css-save-btn" checked>
+                    <label class="custom-control-label" for="css-save-btn"></label>
+                </div>
+            </form>*@
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+
+<style>
+    .button-glow {
+        background: linear-gradient(-45deg, #00A900, darkgreen, #00ff21);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        width: 175px;
+        height: 35px;
+        border-radius: 20px;
+        margin: 0 auto;
+        padding: 0;
+        display: inline-block;
+        line-height: 35px;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+    }
+        .button-glow:hover {
+            text-decoration: none;
+            color: darkgreen;
+            transition: all 0.4s ease 0s;
+        }
+    .button-ghost {
+        color: #494949 !important;
+        text-decoration: none;
+        background: #ffffff;
+        padding: 20px;
+        border: 1px solid #494949 !important;
+        border-radius: 20px;
+        width: 125px;
+        height: 35px;
+        margin: 0 auto;
+        padding: 0;
+        display: inline-block;
+        line-height: 35px;
+        text-align: center;
+        color: white;
+        font-weight: 300;
+        font-size: small;
+        margin-left: 15px;
+    }
+    .button-ghost:hover {
+        text-decoration: none;
+        color: darkgreen;
+    }
+
+    @@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+</style>

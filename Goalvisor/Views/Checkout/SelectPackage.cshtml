@@ -1,0 +1,160 @@
+﻿@model IEnumerable<Goalvisor.Models.Package>
+@{ ViewData["Title"] = "Select Package"; }
+
+<link href="~/css/customStyle.css" rel="stylesheet" />
+<div id="wait" style="        display: none;
+        width: 100%;
+        height: 100%;
+        border: 1px solid black;
+        position: fixed;
+        background-color: gray;
+        opacity: 0.5;
+        text-align: center;
+        top: 0;
+        left: 0;
+        z-index: 1;">
+    <img src='~/Images/loader.gif' width="100" height="100" class="imgLoader" /><br>Loading..
+</div>
+<div class="container mb-5 mt-5">
+
+    @{ string stripeSubId = ViewBag.SubscriptionId;
+        if (string.IsNullOrEmpty(ViewBag.SubscriptionId))
+        {
+            stripeSubId = "";
+        } }
+
+    <div class="pricing card-deck flex-column flex-md-row mb-3">
+        @foreach (var item in Model)
+        {
+            <div class="card card-pricing text-center px-3 mb-4">
+                <span class="h6 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">@item.Name</span>
+                <div class="bg-transparent card-header pt-4 border-0">
+                    <h1 class="h1 font-weight-normal text-primary text-center mb-0" data-pricing-value="15">£<span class="price">@item.Price</span><span class="h6 text-muted ml-2">/ per @item.Interval</span></h1>
+                </div>
+                <div class="card-body pt-0">
+                    <ul class="list-unstyled mb-4">
+                        @if (item.Description != null)
+                        {
+                            foreach (var desc in item.Description.Split("\n"))
+                            {
+                                <li>@desc</li>
+                            }
+                        }
+                    </ul>
+                    @{ //string stripeSubId, double amount, string packageName, string priceId
+
+                        if (string.IsNullOrEmpty(stripeSubId))
+                        {
+                            <a class="btn btn-outline-secondary mb-3"
+                               href="/Checkout/Checkout?stripePackageId=@Goalvisor.Common.ScannerSuite3DES.Encrypt(""+item.ProductId)&amount=@Goalvisor.Common.ScannerSuite3DES.Encrypt(item.Price.ToString())&packageName=@Goalvisor.Common.ScannerSuite3DES.Encrypt(item.Name)&priceId=@Goalvisor.Common.ScannerSuite3DES.Encrypt(item.StripePriceId)">Checkout</a> }
+                        else
+                        {
+                            <a class="btn btn-outline-secondary mb-3" href="#" onclick="ConfirmOption('@Goalvisor.Common.ScannerSuite3DES.Encrypt(stripeSubId)','@Goalvisor.Common.ScannerSuite3DES.Encrypt(item.ProductId)','@Goalvisor.Common.ScannerSuite3DES.Encrypt(item.StripePriceId)')">Checkout</a> } }
+                    @*<a class="btn btn-outline-secondary mb-3" href="/Checkout/Checkout?packageId=@item.Id&amount=@item.Price.ToString()&packageName=@item.Name">Checkout</a>*@
+                </div>
+            </div>}
+    </div>
+</div>
+
+<input id="hdnPackageId" type="hidden" />
+<input id="hdnPriceId" type="hidden" />
+<input id="hdnSubscripeId" type="hidden" />
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Confirm Upgrade</h4>
+                @*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <span>
+                        <h4 class="modal-title" id="myModalLabel">Confirm Upgrade</h4>
+                    </span>*@
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to upgrade your subscription.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="btnHideShowSpinner" class="btn btn-primary" disabled>
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Updating...
+                </button>
+                <a id="btnUpdateTransfer" class="btn btn-primary btn-ok" onclick="UpgradePackageClient()">Proceed</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#btnHideShowSpinner").hide();
+        $("#btnUpdateTransfer").hide();
+
+        $(document).ajaxStart(function () {
+            $("#wait").css("display", "block");
+        });
+        $(document).ajaxComplete(function () {
+            $("#wait").css("display", "none");
+        });
+
+    });
+
+    function ConfirmOption(stripeSubId, packageId, priceId) {
+        $("#btnHideShowSpinner").hide();
+        $("#btnUpdateTransfer").show();
+
+        $('#hdnPriceId').val(priceId);
+        $('#hdnPackageId').val(packageId);
+        $('#hdnSubscripeId').val(stripeSubId);
+        $("#confirm-delete").modal('toggle'); //see here usage
+    }
+
+    function UpgradePackageClient() {
+        $("#btnHideShowSpinner").show();
+        $("#btnUpdateTransfer").hide();
+        var packageId = $('#hdnPackageId').val();
+        var priceIdPackage = $('#hdnPriceId').val();
+        var stripeSubId = $('#hdnSubscripeId').val();
+
+        var updateDetails = new FormData();
+        updateDetails.append('StripePackageId', packageId);
+        updateDetails.append('StripePriceId', priceIdPackage);//
+        updateDetails.append('StripeSubId', stripeSubId);
+
+        $.ajax({
+            url: '/Checkout/UpdatePackage',
+            type: "POST",
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            data: updateDetails,
+
+            success: function (result) {
+                if (result.ok) {
+                    $("#confirm-delete").hide();
+                    alert(result.msg);
+                    window.location.href = "/Subscriptions/MySubscriptions";
+                }
+                else {
+                    $("#confirm-delete").hide();
+                    alert(result.msg);
+                }
+            },
+            error: function (e) {
+                $("#confirm-delete").hide();
+                alert("error");
+                return false;
+            }
+        });
+
+    }
+    //$('#confirm-delete').on('show.bs.modal', function (e) {
+    //    alert("hello");
+    //    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+    //    $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
+    //});</script>

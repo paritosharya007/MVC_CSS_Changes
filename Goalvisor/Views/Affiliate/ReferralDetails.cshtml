@@ -1,0 +1,128 @@
+﻿@{ ViewData["Title"] = "My Referral History"; }
+
+<div>
+    <div class="float-left">
+        <h1>My Referral Links</h1>
+    </div>
+    <div class="float-right">
+
+        <a class="btn btn-outline-success" asp-area="" asp-controller="Affiliate" asp-action="MyReferralLinks">Back</a>
+        <a class="btn btn-lg btn-primary" asp-area="" asp-controller="Affiliate" asp-action="GenerateLink"><i class="fas fa-plus"></i> Create referral link</a>
+    </div>
+    <div class="clearfix" style="width:100%"></div>
+</div>
+<div>
+    <table id="referraltbl" class="table table-bordered table-striped dataTable" style="width:100%">
+        <thead>
+            <tr>
+                <td style="width:35%">Referral Url</td>
+                <td style="width:15%">FullName</td>
+                <td style="width:10%">Package</td>
+                <td style="width:15%">StartDate</td>
+                <td style="width:25%">Share</td>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <script>
+        let table = {};
+        $(document).ready(function () {
+
+            table = $('#referraltbl').DataTable({
+                "searchable": true,
+                "bDestroy": true,
+                "ordering": true,
+                "serverSide": true,
+                responsive: true,
+                processing: true,
+                sortable: true,
+                ajax: {
+                    "url": "/Affiliate/GetReferLinkHistoryByLinkId",
+                    "data": { "id": @ViewData["linkId"]},
+                    "type": "POST"
+                },
+                columns: [
+                    {
+                        name: 'referralLinkVm.referralUrl',
+                        data: 'referralLinkVm.referralUrl',
+                        title: "Referral Url",
+                        sortable: true
+                    },
+                    {
+                        name: 'fullName',
+                        data: 'fullName',
+                        title: "Full Name",
+                        sortable: true,
+                    },
+                    {
+                        name: 'packageVM.name',
+                        data: 'packageVM.name',
+                        title: "Package",
+                        sortable: true
+                    },
+                    {
+                        name: 'subscriptionVM.startDate',
+                        data: 'subscriptionVM.startDate',
+                        title: "Start Date",
+                        sortable: true
+                    },
+                    {
+                        name: 'Share',
+                        data: null,
+                        targets: -2,
+                        sortable: false,
+                        title: 'Share',
+                        searchable: false,
+                        "render": function (data, type, full, meta) {
+                            return generatesharebuttons(full.referralLinkVm.referralUrl);
+                        }
+                    }
+                ]
+            });
+
+           var CreateSuccessMsg = "@(TempData["SuccessMsg"] as string)";
+              var  ErrMsg = "@(TempData["ErrorMsg"] as string)";
+
+        if (CreateSuccessMsg !== "") {
+
+            notifySucess(CreateSuccessMsg);
+            }
+            if (ErrMsg !== "") {
+
+                notifyError(ErrMsg);
+            }
+
+        });
+
+        function generatesharebuttons(linkurl) {
+
+            let btns = '<div class="form-group">' +
+                '<div class="input-group">' +
+                '<a class="pl-1 pr-1 " href="https://www.addtoany.com/add_to/facebook?linkurl=' + linkurl + '&amp;linkname=" target="_blank"> <img src="https://static.addtoany.com/buttons/facebook.svg" width="32" height="32" style="background-color:#3a559f"></a>' +
+                '<a class="pl-1 pr-1" href="https://www.addtoany.com/add_to/twitter?linkurl=' + linkurl + '&amp;linkname=" target="_blank"> <img src="https://static.addtoany.com/buttons/twitter.svg" width="32" height="32" style="background-color:rgb(29, 161, 242)"></a>' +
+                '<a class="pl-1 pr-1" href="https://www.addtoany.com/add_to/email?linkurl=' + linkurl + '&amp;linkname=" target="_blank"> <img src="https://static.addtoany.com/buttons/email.svg" width="32" height="32" style="background-color:#1e5def"></a>' +
+                '<a class="pl-1 pr-1" href="https://www.addtoany.com/add_to/linkedin?linkurl=' + linkurl + '&amp;linkname=" target="_blank"> <img src="https://static.addtoany.com/buttons/linkedin.svg" width="32" height="32" style="background-color:#0a66c2"></a>' +
+                '<a class="pl-1 pr-1" href="https://www.addtoany.com/add_to/whatsapp?linkurl=' + linkurl + '&amp;linkname=" target="_blank"> <img src="https://static.addtoany.com/buttons/whatsapp.svg" width="32" height="32" style="background-color:#4adf83"></a>' +
+                '<a class="pl-1 pr-1"  onclick="copytoclipboard(\'' + linkurl + '\')" href="#"><img src="/icons/copy-link-32.png" height="32" width="32" /></a>'
+
+            '</div>' +
+                '</div>';
+            return btns;
+        }
+        function copytoclipboard(copyText) {
+
+            const el = document.createElement('textarea');
+            el.value = copyText;
+            document.body.appendChild(el);
+            el.select();
+            el.setSelectionRange(0, 99999); /* For mobile devices */
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            notifySucess("Copied! " + copyText);
+        }
+    </script>
+}

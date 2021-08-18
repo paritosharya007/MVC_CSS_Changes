@@ -1,0 +1,68 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole<int>
+
+<div class="card" id="addRoleModal">
+    <div class="card-header">
+        @if (Model.Id == 0)
+        {
+<h2>Create new role</h2> }
+            else
+            {
+<h2>Edit Role - @Model.Name</h2>}
+    </div>
+    <div class="card-body">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <input type="text" class="form-control" id="roleId" hidden value="@Model.Id">
+
+                <div class="form-group">
+                    <label>Role Name</label>
+                    <input type="text" class="form-control" id="roleName" placeholder="Role Name" value="@Model.Name">
+                </div>
+            </div>
+            <div style="width:100%">
+                <div class="float-right">
+                    <button class="btn btn-primary" type="button" onclick="validateRole()">
+                        <span id="spinner" class="spinner-border spinner-border-sm"></span>
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-round btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>$(document).ready(function () {
+        $('#spinner').hide();
+    })
+    function validateRole() {
+        let formErrors = [];
+        if (!$('#roleName').val()) { formErrors.push('Role Name is required'); }
+        if (formErrors.length > 0) {
+            formErrors.forEach(function (item, index) {
+                notifyError(item);
+            });
+            return;
+        }
+        $('#spinner').show();
+        let package = {
+            id: $('#roleId').val(),
+            name: $('#roleName').val()
+        }
+
+        $.ajax({
+            url: "/Roles/AddOrUpdate",
+            method: "POST",
+            data: package
+        }).done(function (data) {
+            if (data.success) {
+                $('#addRoleModal').closest('div.modal').modal('hide');
+                notifySucess(data.message);
+                table.draw();
+            } else {
+                notifyError(data.message);
+                $('#spinner').hide();
+            }
+
+        });
+    }</script>

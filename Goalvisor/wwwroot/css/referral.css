@@ -1,0 +1,183 @@
+﻿.referrals-v2 {
+    margin-left: -40px;
+    margin-right: -40px
+}
+
+.referrals-v2__head {
+    padding: 16px 0;
+    background: #3e7eb8;
+    color: #fff;
+    text-align: center
+}
+
+.referrals-v2__heading {
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;
+    font-weight: 600
+}
+
+.referrals-v2__heading--size-h3 {
+    font-size: 28px
+}
+
+.referrals-v2__heading--size-p2 {
+    font-size: 20px
+}
+
+.referrals-v2__headline {
+    margin: 0 12px 8px
+}
+
+.referrals-v2__learn-more-link:hover, .referrals-v2__learn-more-link:link, .referrals-v2__learn-more-link:visited {
+    color: #fff;
+    text-transform: uppercase;
+    text-decoration: underline;
+    font-size: 14px
+}
+
+.referrals-v2__share-tools {
+    background: #fff;
+    padding: 32px 24px
+}
+
+.referrals-v2__share-tools-heading {
+    text-align: center;
+    margin-bottom: 32px
+}
+
+.referrals-v2__share-section {
+    margin-bottom: 24px
+}
+
+.referrals-v2__share-section-header {
+    text-align: center;
+    padding-bottom: 8px
+}
+
+.referrals-v2__share-section-btn, .referrals-v2__share-section-input {
+    height: 44px
+}
+
+.referrals-v2__share-section-btn {
+    position: relative;
+    padding: 0 8px;
+    min-width: 70px;
+    background-color: #13aae5;
+    border-color: #13aae5
+}
+
+    .referrals-v2__share-section-btn:focus, .referrals-v2__share-section-btn:hover {
+        background-color: #249dd9;
+        border-color: #249dd9
+    }
+
+    .referrals-v2__share-section-btn:active {
+        background-color: #338bc6;
+        border-color: #338bc6
+    }
+
+.referrals-v2__share-section-btn-spinner, .referrals-v2__share-section-btn-text {
+    -webkit-transition: opacity .2s;
+    transition: opacity .2s
+}
+
+.referrals-v2__share-section-btn-spinner {
+    display: block;
+    opacity: 0;
+    position: absolute;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%
+}
+
+    .referrals-v2__share-section-btn-spinner::before {
+        content: '';
+        display: block;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        border: 3px solid rgba(255,255,255,.4);
+        border-top: 3px solid #fff;
+        -webkit-animation: referrals-v2-rotating 1.2s infinite linear;
+        animation: referrals-v2-rotating 1.2s infinite linear
+    }
+
+@-webkit-keyframes referrals-v2-rotating {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+
+@keyframes referrals-v2-rotating {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+
+.has-error .referrals-v2__share-section-input {
+    border-color: #ff5c52
+}
+
+.has-error .referrals-v2__share-section-input, .has-error .referrals-v2__share-section-input-help {
+    color: #ff5c52
+}
+
+.has-success .referrals-v2__share-section-input {
+    border-color: #67d19e
+}
+
+.has-succcess .referrals-v2__share-section-input, .has-success .referrals-v2__share-section-input-help {
+    color: #42c888
+}
+
+.referrals-v2__share-section--copy .input-group {
+    position: relative;
+    overflow: visible
+}
+
+    .referrals-v2__share-section--copy .input-group::before {
+        content: '';
+        position: absolute;
+        display: block;
+        top: -15px;
+        left: -15px;
+        width: 30px;
+        height: 30px;
+        background-image: url(referrals-v2/scissors_066ebd6c04a12622e544d8f485206644.svg);
+        z-index: 10
+    }
+
+.referrals-v2__share-section--copy .form-control {
+    position: relative;
+    background: #fff;
+    border-style: dashed;
+    box-shadow: none;
+    -webkit-appearance: none
+}
+
+.referrals-v2__share-section--email .loading .referrals-v2__share-section-btn-text {
+    opacity: 0
+}
+
+.referrals-v2__share-section--email .loading .referrals-v2__share-section-btn-spinner {
+    opacity: 1
+}
+
+.referrals-v2__services {
+    text-align: center;
+    white-space: nowrap
+}
+
+.referrals-v2__service {
+    display: inline-block;
+    margin: 0 8px
+}
+
+.referrals-v2__service-img {
+    padding-bottom: 4px
+}

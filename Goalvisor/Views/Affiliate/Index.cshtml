@@ -1,0 +1,39 @@
+﻿@{ ViewData["Title"] = "Affiliate"; }
+<style>
+    .linkbg {
+        background-color: #f7f7f7 !important;
+        /*color: #fff;*/
+        border-radius: 4px;
+        padding: 0px 4px 0px 4px;
+    }
+</style>
+
+<div class="container border" style="border-radius:10px;">
+
+    <h2> Refer a friend info </h2>
+    <hr />
+    <div class="col-sm-12">
+        <div class=" pl-2 pr-2 pb-1">
+            <h4>You will recieve 20% of each payment for premium from users in your affiliate!</h4>
+        </div>
+        <div class="pl-2 pr-2">
+            <h5>How to start</h5>
+            <p>
+                <b>1. Create your own link in</b> <a href="#" class="linkbg">Manage Links</a> <b>we don't really like default links like </b>  <a href="#" class="linkbg">https://scannersuite-2611.azurewebsites.net/join?r=123</a>
+                <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; So you can create something like </b> <a href="#" class="linkbg">https://scannersuite-2611.azurewebsites.net/join?r=john</a>
+            </p>
+
+            <p>
+                <b>2. Share this link anywhere you want.</b>
+            </p>
+            <p>  <b>3. In section </b> <a href="#" class="linkbg">Users Overview</a> <b>you can see all registered users through your links and their payments.</b></p>
+            <p> <b>4. Payout is available for any amount anytime in section </b> <a href="#" class="linkbg">Payout</a></p>
+        </div>
+        <br />
+        <div class="text-center">
+            <a class="btn btn-lg btn-primary" asp-area="" asp-controller="Affiliate" asp-action="GenerateLink"><i class="fas fa-plus"></i> Create referral link</a>
+        </div>
+        <br />
+    </div>
+</div>
+<br />

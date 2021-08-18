@@ -1,0 +1,104 @@
+﻿@model Goalvisor.Models.ApplicationUser;
+
+<div class="card" id="updateAccountInfo">
+    <div class="card-header">
+        <h1>Update Referral Id</h1>
+    </div>
+    <div class="card-body">
+        <div class="row clearfix"></div>
+        <div>
+            <div class="clearfix"></div>
+            <div>
+                <div class="alert alert-warning" role="alert">
+                    You can create your custom refferal code, which will be visible withiin your refferal URL. Please note, custom refferal codes can only be set once.
+                </div>
+            </div>
+            <div style="width:100%">
+                <div class="form-group">
+                    <label>Referral Code</label>
+                    @Html.EditorFor(x => x.ReferralCode, new { htmlAttributes = new { @class = "form-control", @width = "400", @id = "txtCode", @onkeyup = "updateURL();" } })
+                </div>
+                <div class="form-group">
+                    <label>Your Referral URL would be : </label>
+                    <label id="lblURL">@ViewData["RootURL"]Account/Join?r=@Model.ReferralCode</label>
+                </div>
+                <button class="btn btn-primary" type="button" onclick="validateCode()">
+                    <span id="spinner" class="spinner-border spinner-border-sm"></span>
+                    Update
+                </button>
+                <button type="button" class="btn btn-round btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#spinner').hide();
+    })
+
+    function updateURL() {
+        var rootURL = '@ViewData["RootURL"]';
+        var userCode = $("#txtCode").val();
+        $("#lblURL").text(rootURL + "Account/Join?r=" + userCode);
+    }
+
+    function validateCode() {
+        let formErrors = [];
+        if (!$('#txtCode').val()) { formErrors.push('Referral code value is required'); }
+        if ($('#txtCode').val().length > @ViewData["codeLength"]) { formErrors.push('Referral code length should not exceed ' + @ViewData["codeLength"] + ' characters'); }
+        if ($('#txtCode').val() && !isAlphaNumeric($('#txtCode').val())) { formErrors.push('Referral code value should contain either numbers or letters.'); }
+
+        if (formErrors.length > 0) {
+            formErrors.forEach(function (item, index) {
+                notifyError(item);
+            });
+            return;
+        }
+
+        $('#spinner').show();
+
+        $.ajax({
+            url: "/MyAccount/IsUniqueReferralCode?r=" + $('#txtCode').val(),
+            method: "POST"
+        }).done(function (data) {
+            if (data == true) {
+                updateCode();
+            } else {
+                notifyError("Referral code already exist. Please choose a different one!");
+                $('#spinner').hide();
+            }
+        });
+    }
+
+    function updateCode() {
+        let userVM = {
+            id: @Model.Id,
+            ReferralCode: $('#txtCode').val()
+        }
+        $.ajax({
+            url: "/MyAccount/UpdateReferralId",
+            method: "POST",
+            data: userVM
+        }).done(function (data) {
+            if (data == true) {
+                $('#updateAccountInfo').closest('div.modal').modal('hide');
+                notifySucess("Referral code updated successfully!");
+                setTimeout(function () { location.reload(true); }, 2000);
+            } else {
+                notifyError("An unexpected error!");
+            }
+            $('#spinner').hide();
+        });
+    }
+
+    function isAlphaNumeric(str) {
+        var regexp = /^[A-Za-z0-9]+$/;
+        if (regexp.test(str)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>

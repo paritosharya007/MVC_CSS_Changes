@@ -1,0 +1,66 @@
+﻿@model Goalvisor.ViewModels.AddSubscriptionVM;
+
+<div class="card" id="addPackageModal">
+    <div class="card-header">
+        <h2>Add subscription to @Model.User.FullName</h2>
+    </div>
+    <div class="card-body">
+        <div class="row clearfix">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Available Packages</label>
+                    <select class="form-control" id="selectedPackage">
+                        <option value=""></option>
+                        @foreach (var role in Model.Packages)
+                        {
+                            <option value="@role.Id">@role.Name</option>
+                        }                    
+                    </select>
+                </div>
+            </div>
+            <div style="width:100%">
+                <div class="float-right">
+                    <button class="btn btn-primary" type="button" onclick="validatePackage()">
+                        <span id="spinner" class="spinner-border spinner-border-sm"></span>
+                        Validate
+                    </button>
+                    <button type="button" class="btn btn-round btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#spinner').hide();
+    })
+    function validatePackage() {
+        let formErrors = [];
+        if ($('#selectedPackage').val() == "") { formErrors.push('Choose a valid package'); }
+        if (formErrors.length > 0) {
+            formErrors.forEach(function (item, index) {
+                notifyError(item);
+            });
+            return;
+        }
+        $('#spinner').show();
+        let data = {
+            subscriptionId: $('#selectedPackage').val(),
+        }
+        $.ajax({
+            url: "/Users/AddSubscription/@Model.User.Id",
+            method: "POST",
+            data: data
+        }).done(function (data) {
+            if (data.success) {
+                $('#addPackageModal').closest('div.modal').modal('hide');
+                notifySucess(data.message);
+                table.draw();
+            } else {
+                notifyError(data.message);
+                $('#spinner').hide();
+            }
+        });
+    }
+</script>   

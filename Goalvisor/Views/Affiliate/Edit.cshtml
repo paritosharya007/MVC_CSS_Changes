@@ -1,0 +1,51 @@
+﻿@model Goalvisor.Models.ReferralLink
+
+@{ ViewData["Title"] = "Edit Referral Link"; }
+<div class="card-header">
+
+    @{ if (Model.Id == 0)
+                    {
+        <h2>Create new Referral link</h2> }
+                    else
+                    {
+        <h2>Edit Referral Link - #@Model.Id</h2> } }
+</div>
+<form method="post" asp-action="AddEdit" asp-controller="Affiliate">
+    <div class="form-group">
+        <div class="input-group">
+            <input type="hidden" id="Id" hidden asp-for="@Model.Id">
+            <label for="name">Name : </label>
+            <input asp-for="@Model.Name" class="form-control ml-2 mb-4" type="text" width="100" required placeholder="Type a name" tabindex="106">
+            <span asp-validation-for="@Model.Name" class="text-danger"></span>
+        </div>
+        <div class="input-group">
+            <input type="text" readonly value="@ViewBag.baseUrl" class="form-control" />
+            <input asp-for="@Model.ReferralUrl" class="form-control mr-2" type="text" required placeholder="" title="" tabindex="106">
+            <span asp-validation-for="@Model.ReferralUrl" class="text-danger"></span>
+            <div class="input-group-btn">
+                <button class="btn btn-success" type="submit" tabindex="107">
+                    <span>Edit Link</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+              var CreateSuccessMsg = "@(TempData["SuccessMsg"] as string)";
+              var  ErrMsg = "@(TempData["ErrorMsg"] as string)";
+
+        if (CreateSuccessMsg !== "") {
+
+            notifySucess(CreateSuccessMsg);
+            }
+            if (ErrMsg !== "") {
+
+                notifyError(ErrMsg);
+            }
+        })
+    </script>
+}

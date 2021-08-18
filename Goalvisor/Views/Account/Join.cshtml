@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Goalvisor.Models.Package>
+@{ ViewData["Title"] = "Join"; }
+<div class="container mb-5 mt-5">
+    <div class="pricing card-deck flex-column flex-md-row mb-3">
+        @foreach (var item in Model)
+        {
+<div class="card card-pricing text-center px-3 mb-4">
+    <span class="h6 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">@item.Name</span>
+    <div class="bg-transparent card-header pt-4 border-0">
+        <h1 class="h1 font-weight-normal text-primary text-center mb-0" data-pricing-value="15">£<span class="price">@item.Price</span><span class="h6 text-muted ml-2">/ per @item.Interval</span></h1>
+    </div>
+    <div class="card-body pt-0">
+        <ul class="list-unstyled mb-4">
+            @if (item.Description != null)
+            {
+                foreach (var desc in item.Description.Split("\n"))
+                {
+
+<li>@desc</li>}
+                }
+        </ul>
+        @if (ViewData["Key"].ToString() != "")
+        {@*<a class="btn btn-outline-secondary mb-3" href="/Account/Register?packageId=@item.Id&r=@ViewData["Key"].ToString()">Sign Up</a>*@
+                            <a class="btn btn-outline-secondary mb-3" href="/Account/Register?stripePackageId=@Goalvisor.Common.ScannerSuite3DES.Encrypt(""+item.ProductId)&stripePriceId=@Goalvisor.Common.ScannerSuite3DES.Encrypt(""+item.StripePriceId)&r=@ViewData["Key"].ToString()">Sign Up</a> }
+                        else
+                        { @*<a class="btn btn-outline-secondary mb-3" href="/Account/Register?packageId=@item.Id">Sign Up</a>*@
+                                            <a class="btn btn-outline-secondary mb-3" href="/Account/Register?stripePackageId=@Goalvisor.Common.ScannerSuite3DES.Encrypt(""+item.ProductId)&stripePriceId=@Goalvisor.Common.ScannerSuite3DES.Encrypt(""+item.StripePriceId)">Sign Up</a>}
+    </div>
+</div>}
+    </div>
+</div>

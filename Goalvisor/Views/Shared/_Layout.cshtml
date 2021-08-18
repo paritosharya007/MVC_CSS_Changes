@@ -1,0 +1,152 @@
+﻿@using Microsoft.AspNetCore.Authentication.Cookies;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark">
+    <title>@ViewData["Title"] - Goalvisor</title>
+
+    <link href="~/css/Tivo/styles.css" rel="stylesheet">
+
+    @*<link href="~/css/Tivo/bootstrap.css" rel="stylesheet">*@
+    <link href="~/css/Tivo/fontawesome-all.css" rel="stylesheet">
+    <link href="~/css/Tivo/swiper.css" rel="stylesheet">
+    <link href="~/css/Tivo/magnific-popup.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/datatables.min.css" />
+    <link rel="stylesheet" href="~/css/sweetalert2.min.css" />
+    <link rel="stylesheet" href="~/css/daterangepicker.css" />
+
+    <!-- Bootstrap CSS -->
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-nightshade.css">*@
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap&subset=latin-ext" rel="stylesheet">
+
+</head>
+<body>
+
+    <header>
+        <partial name="_NavMenu" />
+    </header>
+    <div class="main-container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+            <div id="Global-Dynamic-Modals">
+            </div>
+        </main>
+    </div>
+    <div id="progress" class="modal123">
+    </div>
+    <div class="clearfix" style="width:100%"></div>
+    <footer class="border-top footer pt-3">
+        Goalvisor
+        @*<div class="container">
+                &copy; 2021 - Goalvisor
+            </div>*@
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/bootstrap-notify.min.js"></script>
+    <script src="~/js/datatables.min.js" type="text/javascript"></script>
+    <script src="~/js/sweetalert2.all.min.js" type="text/javascript"></script>
+    <script src="~/js/moment-with-locales.js" type="text/javascript"></script>
+    <script src="~/js/daterangepicker.min.js" type="text/javascript"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/modalUtils.js" asp-append-version="true"></script>
+
+    <script src="~/js/Tivo/jquery.min.js"></script> <!-- jQuery for Bootstrap's JavaScript plugins -->
+    <script src="~/js/Tivo/popper.min.js"></script> <!-- Popper tooltip library for Bootstrap -->
+    <script src="~/js/Tivo/bootstrap.min.js"></script> <!-- Bootstrap framework -->
+    <script src="~/js/Tivo/jquery.easing.min.js"></script> <!-- jQuery Easing for smooth scrolling between anchors -->
+    <script src="~/js/Tivo/swiper.min.js"></script> <!-- Swiper for image and text sliders -->
+    <script src="~/js/Tivo/jquery.magnific-popup.js"></script> <!-- Magnific Popup for lightboxes -->
+    <script src="~/js/Tivo/validator.min.js"></script> <!-- Validator.js - Bootstrap plugin that validates forms -->
+    <script src="~/js/Tivo/scripts.js"></script> <!-- Custom scripts -->
+    <script>
+        $(document).ready(function () {
+
+            // This code uses `localStorage` to save "user prefers color" persistently
+            // This key used is `user-prefers-color`, and should be one of:
+            //  0 = only used at first trigger, to indicate firts time selection
+            //  1 = user wants light mode
+            //  2 = user wants dark mode
+            // the key can also be deleted to indicate user has no preference.
+
+            // function to toggle the css
+            function toggle_color_scheme_css($mode) {
+                // amend the body classes
+                if ($mode == 'dark') {
+                    $("html").removeClass('light').addClass("dark");
+                    $("nav").removeClass("navbar-light").addClass('navbar-dark');
+                    $("nav").removeClass("bg-white").addClass('bg-black');
+
+                    $(".lda").removeClass('dark').addClass("light");
+                    $(".lbl-ld").html("<i class='fas fa-sun' aria-hidden='true'> </i> Light");
+                } else {
+                    $("html").removeClass("dark").addClass('light');
+                    $("nav").removeClass("navbar-dark").addClass('navbar-light');
+                    $("nav").removeClass("bg-black").addClass('bg-white');
+                    $(".lbl-ld").html("<i class='fa fa-moon' aria-hidden='true'></i> Dark");
+                    $(".lda").removeClass('light').addClass("dark");
+                }
+                // if on user prefers color then update stored value
+                $upc = window.localStorage.getItem('user-prefers-color');
+                if ($upc !== null) {
+                    if ($upc == 0) $("#css-save-btn").prop("checked", true);  // first time click
+                    window.localStorage.setItem('user-prefers-color', ($mode == 'dark') ? 2 : 1);
+                }
+            }
+
+            // function / listener action to toggle the button
+            function update_color_scheme_css() {
+                $upc = window.localStorage.getItem('user-prefers-color');
+                if (($upc === null) || ($upc == 0)) {
+                    $mode = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? 'dark' : 'light';
+                } else {
+                    $mode = ($upc == 2) ? 'dark' : 'light';
+                }
+                $("#css-toggle-btn").prop("checked", ('dark' == $mode));
+                toggle_color_scheme_css($mode);
+            }
+
+            // initial mode discovery & update button
+            update_color_scheme_css();
+            if (window.localStorage.getItem('user-prefers-color') !== null)
+                $("#css-save-btn").prop("checked", true);
+
+            // update every time it changes
+            if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addListener(update_color_scheme_css);
+
+            // toggle button click code
+            $("#css-toggle-btn").bind("click", function () {
+                // disable further automatic toggles
+                if (window.localStorage.getItem('user-prefers-color') === null)
+                    window.localStorage.setItem('user-prefers-color', 0);
+                // get current mode, i.e. does body have the `.dark`` classname
+                $mode = $("html").hasClass("dark") ? 'light' : 'dark';
+                toggle_color_scheme_css($mode);
+            });
+
+            // toggle button click code
+            $("#css-save-btn").bind("click", function () {
+                $chk = $("#css-save-btn").prop("checked");
+                if ($chk) {
+                    // user wants persistance, save current state
+                    $upc = $("html").hasClass("dark") ? 2 : 1;
+                    window.localStorage.setItem("user-prefers-color", $upc);
+                } else {
+                    // user doesn't want pesistace, delete saved key
+                    window.localStorage.removeItem("user-prefers-color");
+                }
+            });
+
+        });</script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
