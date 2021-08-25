@@ -1483,11 +1483,14 @@ a.back-to-top {
 	border-radius: 1.875rem;
 	background: #4f3cda url("../images/up-arrow.png") no-repeat center 47%;
 	background-size: 1.125rem 1.125rem;
-	text-indent: -9999px;
+	/*text-indent: -9999px;*/
+	color: #fff;
+	font-size: 20px;
+	text-align: center;
 }
 
 a:hover.back-to-top {
-	background-color: #4332c5; 
+	color: #fff; 
 }
 
 

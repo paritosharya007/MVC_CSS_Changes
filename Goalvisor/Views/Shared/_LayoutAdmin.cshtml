@@ -8,12 +8,13 @@
     <meta name="color-scheme" content="light dark">
     <title>@ViewData["Title"] - Goalvisor</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
-    <link rel="stylesheet" href="~/css/site.css" />
+    @*<link href="~/css/Tivo/fontawesome-all.css" rel="stylesheet">*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css?v=0.4" />
     <link rel="stylesheet" href="~/css/datatables.min.css" />
     <link rel="stylesheet" href="~/css/sweetalert2.min.css" />
     <link rel="stylesheet" href="~/css/daterangepicker.css" />
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-nightshade.css">
 </head>
@@ -22,7 +23,7 @@
     <header>
         <partial name="_NavMenuAdmin" />
     </header>
-    <div class="container">
+    <div class="container-fluid main-container">
         <main role="main" class="pb-3">
             @RenderBody()
             <div id="Global-Dynamic-Modals">
@@ -30,10 +31,28 @@
         </main>
     </div>
 
-    <footer class="border-top footer pt-3">
-        <div class="container">
-            &copy; 2021 - Goalvisor
+    <footer id="footer" class="d-flex-column text-center" style=" background-color: #5f4dee;">
+        <hr class="mt-0">
+        <!--Social buttons-->
+        <div class="text-center">
+            <p class="text-white text-center font-weight-bold">Goalvisor</p>
+
         </div>
+        <!--/.Social buttons-->
+        <hr class="mb-0">
+        <!--Footer Links-->
+        <div class="container text-left text-md-center">
+            <div class="row">
+                <div class="text-left text-white p-4">
+                    © 2021 Copyright:
+                    <a class="text-reset text-white fw-bold" href="#">Goalvisor</a>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--/.Copyright-->
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

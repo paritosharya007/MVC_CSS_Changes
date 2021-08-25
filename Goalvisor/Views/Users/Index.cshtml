@@ -2,18 +2,17 @@
     ViewData["Title"] = "Users";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-
 <div>
     <div class="float-left">
         <h1>Manage Users</h1>
     </div>
     <div class="float-right">
-        <button class="btn btn-primary" onclick="addOrUpdate('')">Add New</button>
+        <button class="btn btn-solid-regs" onclick="addOrUpdate('')">Add New</button>
     </div>
     <div class="clearfix" style="width:100%"></div>
 </div>
 <div>
-    <table id="rolesDT" class="table table-bordered table-striped dataTable" style="width:100%">
+    <table id="rolesDT" class="table table-bordered table-hover" style="width:100%">
         <thead>
             <tr>
                 <td style="width:30%">Username</td>

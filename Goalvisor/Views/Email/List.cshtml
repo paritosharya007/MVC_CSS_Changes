@@ -1,17 +1,16 @@
 ﻿@{ ViewData["Title"] = "Template List";
                 Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; }
-
 <div>
     <div class="float-left">
         <h1>Manage Templates</h1>
     </div>
     <div class="float-right">
-        <button class="btn btn-primary" onclick="addOrUpdate(0)">Add New</button>
+        <button class="btn btn-solid-regs" onclick="addOrUpdate(0)">Add New</button>
     </div>
     <div class="clearfix" style="width:100%"></div>
 </div>
 <div>
-    <table id="packagesDT" class="table table-bordered table-striped dataTable" style="width:100%">
+    <table id="packagesDT" class="table table-bordered table-hover dataTable" style="width:100%">
         <thead>
             <tr>
                 <td style="width:15%">Template Name</td>

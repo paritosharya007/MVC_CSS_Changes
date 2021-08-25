@@ -1,4 +1,4 @@
-/* Template: Tivo - SaaS App HTML Landing Page Template
+﻿/* Template: Tivo - SaaS App HTML Landing Page Template
    Author: Inovatik
    Created: Sep 2019
    Description: Custom JS file
@@ -381,7 +381,7 @@
 
     /* Back To Top Button */
     // create the back to top button
-    $('body').prepend('<a href="body" class="back-to-top page-scroll">Back to Top</a>');
+    $('body').prepend('<a href="body" class="back-to-top page-scroll"><i class="fas fa-arrow-up"></i></a>');
     var amountScrolled = 700;
     $(window).scroll(function() {
         if ($(window).scrollTop() > amountScrolled) {
