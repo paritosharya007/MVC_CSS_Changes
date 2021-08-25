@@ -246,10 +246,13 @@ a.btn.btn-info {
 
     #navbarCollapse {
         background-color: lavender;
+        margin-top: 10px;
     }
 
     div#navbarCollapse .navbar-nav a:hover {
-        color: #fff
+        color: #fff;
+      
+        
     }
 
     .navbar-nav.ml-auto a.nav-link {
