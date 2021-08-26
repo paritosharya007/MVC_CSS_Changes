@@ -4,14 +4,16 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject Goalvisor.Services.Users.IUserService userService;
 
-<nav class="navbar navbar-expand-lg navbar-toggleable-lg navbar-light bg-white border-bottom box-shadow mb-3">
-
-    <div class="container">
+<nav class="navbar navbar-expand-lg  navbar-toggleable-lg navbar-light bg-white border-bottom box-shadow mb-3" >
+ 
+    <div class="container-fluid">
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Goalvisor</a>
-
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarNav" aria-expanded="true" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <!-- Collection of nav links, forms, and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
-            <div class="navbar-nav">
+            <div class="navbar-nav" id="navbar-list-2">
                 @if (User.IsInRole(RunTimeElements.AdministratorRole) || User.IsInRole(RunTimeElements.SubscriberRole))
                 {
                     <a class="nav-item nav-link active" asp-area="" asp-controller="Scanner" asp-action="Index">Scanner</a>
@@ -61,11 +63,11 @@
             {
                 <div class="navbar-nav ml-auto">
                     <div class="nav-item dropdown show">
-                        <a data-toggle="dropdown" class="nav-link dropdown-toggle user-action" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle user-action" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-user"></i>
                             Hello, @User.Identity.Name ! <b class="caret"></b>
                         </a>
-                        <div class="dropdown-menu">
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             @if (User.IsInRole(RunTimeElements.AdministratorRole))
                             {
 
@@ -74,35 +76,20 @@
                                 <a class="dropdown-item" asp-area="" asp-controller="Subscriptions" asp-action="Index">Manage Subscription</a>}
                             <a class="nav-item nav-link active" asp-controller="MyAccount" asp-action="Index"><i>...</i> My Account</a>
                             <a class="nav-item nav-link active" asp-controller="Subscriptions" asp-action="MySubscriptions"><i class="fas fa-file-invoice"></i> Subscriptions</a>
-                            <div class="dropdown-divider"></div>
+                          
                             <a class="nav-item nav-link active" asp-area="" asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
+
                     </div>
                 </div> }
             else
-            { 
-                <div class="navbar-nav ml-auto">
+            {
+                <div class="navbar-nav ml-auto navbar-logout">
                     <a class="button-glow" asp-controller="Account" asp-action="Join">Start my free trial</a>
                     <a class="button-ghost" asp-controller="Account" asp-action="Login">Login</a>
                 </div>
             }
         </div>
-        @*<form class="form-inline">
-                <div class="custom-control custom-switch" title="" data-toggle="tooltip" data-placement="left" data-original-title="Toggle Dark Mode">
-                    <a href="#" class="btn btn-light lda">
-                        <label class="lbl-ld" for="css-toggle-btn"><i class="fa fa-sun" aria-hidden="true"></i>Light</label>
-                    </a>
-                    <input type="checkbox" class="custom-control-input" style="visibility:hidden!important" id="css-toggle-btn">
-                </div>
-                <div hidden class="custom-control custom-switch" title="" data-toggle="tooltip" data-placement="left" data-original-title="Remember my preference">
-                    <input type="checkbox" class="custom-control-input" id="css-save-btn" checked>
-                    <label class="custom-control-label" for="css-save-btn"></label>
-                </div>
-            </form>*@
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
     </div>
 </nav>
 
@@ -143,14 +130,25 @@
         line-height: 35px;
         text-align: center;
         color: white;
-        font-weight: 300;
+        font-weight: bold;
+        font-weight: 700;
         font-size: small;
         margin-left: 15px;
+        font-size: 14px;
     }
     .button-ghost:hover {
         text-decoration: none;
-        color: darkgreen;
+        color: #fff!important;
+        background-color:#087ccd;
     }
+    .navbar-dark .navbar-brand:hover, .navbar-dark .navbar-brand:focus {
+         color: #333; 
+    }
+
+    .navbar-dark .navbar-brand {
+         color: #333; 
+    }
+
 
     @@keyframes gradient {
 	0% {

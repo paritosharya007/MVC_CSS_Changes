@@ -6,12 +6,16 @@
 
 <nav class="navbar navbar-expand-lg navbar-toggleable-lg navbar-light bg-white border-bottom box-shadow mb-3">
 
-    <div class="container">
+    <div class="container-fluid">
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Goalvisor</a>
+
+        <button class="navbar-toggler ml-auto mr-3" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarNav" aria-expanded="true" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
         <!-- Collection of nav links, forms, and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
-            <div class="navbar-nav">
+            <div class="navbar-nav" id="navbar-list-2">
                 <a asp-area="" asp-controller="Admin" asp-action="Index" class="nav-item nav-link active">Home</a>
                 <a class="nav-item nav-link active" asp-area="" asp-controller="Admin" asp-action="Guide">Guide</a>
                 <a class="nav-item nav-link active" asp-area="" asp-controller="Admin" asp-action="Support">Support</a>
@@ -35,32 +39,32 @@
 
             @if (SignInManager.IsSignedIn(User))
             {
-<div class="navbar-nav ml-auto">
-    <div class="nav-item dropdown show">
-        <a data-toggle="dropdown" class="nav-link dropdown-toggle user-action" aria-expanded="false">
-            <i class="fas fa-user"></i>
-            Hello, @User.Identity.Name ! <b class="caret"></b>
-        </a>
-        <div class="dropdown-menu">
+                <div class="navbar-nav ml-auto">
+                    <div class="nav-item dropdown show">
+                        <a data-toggle="dropdown" class="nav-link dropdown-toggle user-action" aria-expanded="false">
+                            <i class="fas fa-user"></i>
+                            Hello, @User.Identity.Name ! <b class="caret"></b>
+                        </a>
+                        <div class="dropdown-menu">
 
-            <a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index"><i class="fas fa-user"></i> Manage Users</a>
-            <a class="dropdown-item" asp-area="" asp-controller="Roles" asp-action="Index"><i class="fas fa-cogs"></i> Manage Roles</a>
-            <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Subscriptions">Manage Subscription</a>
-            <a class="nav-item nav-link active" asp-controller="Admin" asp-action="MyAccount"><i>...</i> My Account</a>
-            <div class="dropdown-divider"></div>
-            <a class="nav-item nav-link active" asp-area="" asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-        </div>
-    </div>
-</div> }
+                            <a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index"><i class="fas fa-user"></i> Manage Users</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Roles" asp-action="Index"><i class="fas fa-cogs"></i> Manage Roles</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Subscriptions">Manage Subscription</a>
+                            <a class="nav-item nav-link active" asp-controller="Admin" asp-action="MyAccount"><i>...</i> My Account</a>
+
+                            <a class="nav-item nav-link active" asp-area="" asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div> }
             else
-            { <div class="navbar-nav ml-auto">
+            { <div class="navbar-nav ml-auto navbar-logout">
                     <a class="nav-item nav-link active" asp-controller="Account" asp-action="Login">Login</a>
-                </div>            }
+                </div>}
         </div>
-        <form class="form-inline">
+        <form class="form-inline ">
             <div class="custom-control custom-switch" title="" data-toggle="tooltip" data-placement="left" data-original-title="Toggle Dark Mode">
 
-                <a href="#" class="btn btn-light lda">
+                <a href="#" class="btn btn-dark lda">
 
                     <label class="lbl-ld" for="css-toggle-btn"><i class="fa fa-sun" aria-hidden="true"></i>Light</label>
                 </a>
@@ -72,9 +76,7 @@
                 <label class="custom-control-label" for="css-save-btn"></label>
             </div>
         </form>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+
     </div>
+
 </nav> 
