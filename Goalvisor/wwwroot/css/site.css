@@ -303,6 +303,12 @@ a.btn.btn-info {
     margin-top: 3rem;
     font-size: 1.25rem;
 }
+@media(max-width:767px) {
+    .navbar .navbar-toggler {
+        color: rgba(0, 0, 0, 0.5);
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+}
 /*RESIZESCREEN ANIMATION*/
 .fa-angle-double-right {
     animation: rightanime 1s linear infinite;
