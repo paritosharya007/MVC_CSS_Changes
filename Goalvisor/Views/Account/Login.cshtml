@@ -11,8 +11,9 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">Log in</button>
         </div>
-        <div class="clearfix">
-            <label class="pull-left checkbox-inline"><input type="checkbox" name="RememberMe"> Remember me</label>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="customCheck1" name="RememberMe">
+            <label class="custom-control-label" for="customCheck1"> Remember me</label>
             <a href="/Account/GenerateResetToken" class="pull-right">Forgot Password?</a>
         </div>
     </form>
